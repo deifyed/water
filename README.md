@@ -4,7 +4,8 @@ Water, the simple and neat bootstrapping application for everything.
 
 ## Code Example
 
-`$ touch index.html  
+`$ touch index.html 
+
 $ water index.html`
 
 ## Motivation
