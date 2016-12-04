@@ -30,6 +30,8 @@ $ echo "export PATH=~/.local/bin:$PATH" >> ~/.bashrc
 $ rm -r water
 ```
 
+Place all your bootstraps in ~/.greenery, be it files or folders
+
 ## Contributors
 
 Julius Pedersen
