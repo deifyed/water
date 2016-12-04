@@ -3,10 +3,16 @@
 Water, the simple and neat bootstrapping application for everything.
 
 ## Code Example
-
+Bootstrapping a file
 ```bash
 $ touch index.html
 $ water index.html
+```
+
+Bootstrapping a directory
+```bash
+$ mkdir stack
+$ water stack
 ```
 
 ## Motivation
