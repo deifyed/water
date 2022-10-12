@@ -14,7 +14,7 @@ import (
 
 func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
-		_ = logging.GetLogger()
+		log := logging.GetLogger()
 
 		if len(args) == 0 {
 			return fmt.Errorf("no arguments provided. See --help for usage")
@@ -42,9 +42,13 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 			return fmt.Errorf("discovering template: %w", err)
 		}
 
-		err = fs.WriteReader(targetPath, template)
-		if err != nil {
-			return fmt.Errorf("writing template: %w", err)
+		if targetContext.TargetType == context.TargetTypeFile {
+			err = fs.WriteReader(targetPath, template)
+			if err != nil {
+				return fmt.Errorf("writing template: %w", err)
+			}
+		} else {
+			log.Debugf("target path is a directory, don't know how to handle that yet")
 		}
 
 		return nil
