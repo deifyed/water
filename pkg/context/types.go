@@ -10,4 +10,5 @@ const (
 type Context struct {
 	TargetType TargetType
 	TargetPath string
+	Tags       map[string]string
 }
