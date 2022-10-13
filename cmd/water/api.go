@@ -42,13 +42,15 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 			return fmt.Errorf("discovering template: %w", err)
 		}
 
-		if targetContext.TargetType == context.TargetTypeFile {
-			err = fs.WriteReader(targetPath, template)
-			if err != nil {
-				return fmt.Errorf("writing template: %w", err)
-			}
-		} else {
+		if targetContext.TargetType != context.TargetTypeFile {
 			log.Debugf("target path is a directory, don't know how to handle that yet")
+
+			return nil
+		}
+
+		err = fs.WriteReader(targetPath, template)
+		if err != nil {
+			return fmt.Errorf("writing template: %w", err)
 		}
 
 		return nil
