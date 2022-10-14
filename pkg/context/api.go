@@ -13,7 +13,7 @@ func GatherContext(log logger, fs *afero.Afero, targetPath string) (Context, err
 		return Context{}, fmt.Errorf("statting: %w", err)
 	}
 
-	ctx := Context{TargetPath: targetPath}
+	ctx := Context{TargetPath: targetPath, Tags: make(map[string]string)}
 	var target string
 
 	if info.IsDir() {
