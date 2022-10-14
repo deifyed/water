@@ -9,7 +9,7 @@ import (
 )
 
 var extensionToLanguage = map[string]string{
-	".go":   "go",
+	".go":   "golang",
 	".java": "java",
 	".js":   "javascript",
 	".py":   "python",
