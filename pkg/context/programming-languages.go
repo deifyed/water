@@ -39,6 +39,10 @@ func acquireMainLanguageForDir(fs *afero.Afero, targetDir string) (string, error
 			return fmt.Errorf("acquiring language for file %s: %w", targetPath, err)
 		}
 
+		if lang == "" {
+			return nil
+		}
+
 		_, ok := extensionToLanguage[lang]
 		if !ok {
 			languageCount[lang] = 0
