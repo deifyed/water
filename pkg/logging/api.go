@@ -1,13 +1,15 @@
 package logging
 
 import (
-	"fmt"
+	"errors"
 	"os"
 
 	"github.com/deifyed/water/pkg/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
+
+var errInvalidLevel = errors.New("invalid level")
 
 func GetLogger() *logrus.Logger {
 	log := logrus.New()
@@ -19,18 +21,17 @@ func GetLogger() *logrus.Logger {
 
 	log.Level, err = parseLevel(viper.GetString(config.LogLevel))
 	if err != nil {
-		panic("test")
+		if !errors.Is(err, errInvalidLevel) {
+			panic(err.Error())
+		}
+
+		log.Warnf("defaulting to %s upon invalid log level %s", log.Level, viper.GetString(config.LogLevel))
 	}
 
 	return log
 }
 
 func parseLevel(level string) (logrus.Level, error) {
-	fmt.Println(level)
-	fmt.Println(viper.GetString(config.LogLevel))
-	fmt.Println(viper.ConfigFileUsed())
-	fmt.Println(viper.AllKeys())
-
 	switch level {
 	case "debug":
 		return logrus.DebugLevel, nil
@@ -41,6 +42,6 @@ func parseLevel(level string) (logrus.Level, error) {
 	case "error":
 		return logrus.ErrorLevel, nil
 	default:
-		return logrus.InfoLevel, nil
+		return logrus.InfoLevel, errInvalidLevel
 	}
 }

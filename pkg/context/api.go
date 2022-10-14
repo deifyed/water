@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/afero"
 )
 
-func GatherContext(fs *afero.Afero, targetPath string) (Context, error) {
+func GatherContext(log logger, fs *afero.Afero, targetPath string) (Context, error) {
 	info, err := fs.Stat(targetPath)
 	if err != nil {
 		return Context{}, fmt.Errorf("statting: %w", err)

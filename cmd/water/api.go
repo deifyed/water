@@ -23,6 +23,11 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 		targetPath := args[0]
 		templateDir := viper.GetString(config.TemplatesDirectory)
 
+		log.Debug(map[string]string{
+			"targetPath":  targetPath,
+			"templateDir": templateDir,
+		})
+
 		exists, err := fs.Exists(targetPath)
 		if err != nil {
 			return fmt.Errorf("checking target path existence: %w", err)
@@ -32,12 +37,14 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 			return fmt.Errorf("target path \"%s\" does not exist, please create it before watering", targetPath)
 		}
 
-		targetContext, err := context.GatherContext(fs, targetPath)
+		targetContext, err := context.GatherContext(log, fs, targetPath)
 		if err != nil {
 			return fmt.Errorf("gathering context: %w", err)
 		}
 
-		template, err := template.Discover(fs, templateDir, targetContext)
+		log.Debug(targetContext)
+
+		template, err := template.Discover(log, fs, templateDir, targetContext)
 		if err != nil {
 			return fmt.Errorf("discovering template: %w", err)
 		}

@@ -12,3 +12,7 @@ type Context struct {
 	TargetPath string
 	Tags       map[string]string
 }
+
+type logger interface {
+	Debugf(string, ...interface{})
+}
