@@ -36,7 +36,7 @@ func Discover(log logger, fs *afero.Afero, templateDir string, context context.C
 		}
 	}
 
-	content, err := fs.ReadFile(topHit.Metadata.Target)
+	content, err := fs.ReadFile(path.Clean(topHit.Metadata.Target))
 	if err != nil {
 		return nil, fmt.Errorf("reading top hit target %s: %w", topHit.Metadata.Target, err)
 	}
@@ -96,10 +96,22 @@ func gatherMetadataForTemplateEntities(fs *afero.Afero, templateDir string) ([]m
 			return fmt.Errorf("unmarshalling: %w", err)
 		}
 
-		allMetadatas = append(allMetadatas, metadatas...)
+		allMetadatas = append(allMetadatas, enrichMetadatas(metadatas, path.Dir(targetPath))...)
 
 		return nil
 	})
 
 	return allMetadatas, nil
+}
+
+func enrichMetadatas(items []metadata, baseDir string) []metadata {
+	enrichedMetas := make([]metadata, len(items))
+
+	for index, metadata := range items {
+		enrichedMetas[index] = metadata
+
+		enrichedMetas[index].Target = path.Clean(path.Join(baseDir, metadata.Target))
+	}
+
+	return enrichedMetas
 }
