@@ -20,7 +20,6 @@ var extensionToLanguage = map[string]string{
 
 // acquireMainLanguageForDir attempts to determine the main programming language of the target directory
 func acquireMainLanguageForDir(fs *afero.Afero, targetDir string) (string, error) {
-	numberOfFiles := 0
 	languageCount := make(map[string]int)
 
 	fs.Walk(targetDir, func(targetPath string, info os.FileInfo, err error) error {
@@ -31,8 +30,6 @@ func acquireMainLanguageForDir(fs *afero.Afero, targetDir string) (string, error
 		if info.IsDir() {
 			return nil
 		}
-
-		numberOfFiles++
 
 		lang, err := acquireMainLanguageForFile(fs, targetPath)
 		if err != nil {
