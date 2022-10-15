@@ -16,8 +16,9 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
 		log := logging.GetLogger()
 
-		if len(args) == 0 {
-			return fmt.Errorf("no arguments provided. See --help for usage")
+		err := validate(fs, args)
+		if err != nil {
+			return fmt.Errorf("validating: %w", err)
 		}
 
 		targetPath := args[0]
@@ -27,15 +28,6 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 			"targetPath":  targetPath,
 			"templateDir": templateDir,
 		})
-
-		exists, err := fs.Exists(targetPath)
-		if err != nil {
-			return fmt.Errorf("checking target path existence: %w", err)
-		}
-
-		if !exists {
-			return fmt.Errorf("target path \"%s\" does not exist, please create it before watering", targetPath)
-		}
 
 		targetContext, err := context.GatherContext(log, fs, targetPath)
 		if err != nil {
@@ -62,4 +54,23 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 
 		return nil
 	}
+}
+
+func validate(fs *afero.Afero, args []string) error {
+	if len(args) == 0 {
+		return errMissingArguments
+	}
+
+	targetPath := args[0]
+
+	exists, err := fs.Exists(targetPath)
+	if err != nil {
+		return fmt.Errorf("checking target path existence: %w", err)
+	}
+
+	if !exists {
+		return fmt.Errorf("please create %s before watering: %w", targetPath, errTargetNotExists)
+	}
+
+	return nil
 }
