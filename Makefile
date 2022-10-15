@@ -2,7 +2,7 @@
 BINARY_NAME=water
 GOPATH := $(shell go env GOPATH)
 GOBIN ?= $(GOPATH)/bin
-INSTALL_DIR=~/.local/bin
+PREFIX=~/.local/bin
 BUILD_DIR=./build
 
 GO := $(shell command -v go 2> /dev/null)
@@ -54,11 +54,11 @@ build:
 
 install:
 	test -f $(BUILD_DIR)/$(BINARY_NAME)
-	mkdir -p $(INSTALL_DIR)
-	cp $(BUILD_DIR)/$(BINARY_NAME) $(INSTALL_DIR)
+	mkdir -p $(PREFIX)
+	cp $(BUILD_DIR)/$(BINARY_NAME) $(PREFIX)
 
 uninstall:
-	rm $(INSTALL_DIR)/$(BINARY_NAME)
+	rm $(PREFIX)/$(BINARY_NAME)
 
 clean:
 	@rm -rf $(BUILD_DIR)

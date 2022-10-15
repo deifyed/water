@@ -28,6 +28,6 @@ make build
 # Then install it into ~/.local/bin
 make install
 
-# To adjust installation path, set PREFIX
+# To adjust installation path, set the PREFIX variable
 make install PREFIX=/usr/local
 ```
