@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path"
 
 	"github.com/deifyed/water/cmd/water"
 	"github.com/deifyed/water/pkg/config"
+	"github.com/deifyed/water/pkg/logging"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -70,6 +70,8 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	log := logging.GetLogger()
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
@@ -90,8 +92,8 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		log.Debugf("Using config file: %s", viper.ConfigFileUsed())
 	} else {
-		fmt.Fprintln(os.Stderr, "No config file found, using defaults")
+		log.Debug("No config file found, using defaults")
 	}
 }
