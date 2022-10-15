@@ -13,6 +13,10 @@ RICHGO := $(GOBIN)/richgo
 $(RICHGO):
 	@go install github.com/kyoh86/richgo@v0.3.6
 
+GOSEC := $(GOBIN)/gosec
+$(GOSEC):
+	curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v2.13.1
+
 fmt:
 	@goimports -w .
 	@gofmt -w .
@@ -23,7 +27,10 @@ lint: $(GOLANGCILINT)
 test: $(RICHGO)
 	@$(RICHGO) test -v ./...
 
-check: fmt lint test
+security: $(GOSEC)
+	gosec ./...
+
+check: fmt lint test security
 
 build:
 	mkdir -p $(BUILD_DIR)
