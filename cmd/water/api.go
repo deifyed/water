@@ -15,6 +15,7 @@ import (
 func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
 		log := logging.GetLogger()
+		log.Debug(viper.AllSettings())
 
 		err := validate(fs, args)
 		if err != nil {
@@ -24,10 +25,7 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 		targetPath := args[0]
 		templateDir := viper.GetString(config.TemplatesDirectory)
 
-		log.Debug(map[string]string{
-			"targetPath":  targetPath,
-			"templateDir": templateDir,
-		})
+		log.Debugf("target: %s", targetPath)
 
 		targetContext, err := context.GatherContext(log, fs, targetPath)
 		if err != nil {
@@ -37,6 +35,7 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 		log.Debug(targetContext)
 
 		log.Debugf("Discover templates in %s", templateDir)
+
 		template, err := template.Discover(log, fs, templateDir, targetContext)
 		if err != nil {
 			return fmt.Errorf("discovering template: %w", err)
