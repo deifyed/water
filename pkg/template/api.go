@@ -110,6 +110,7 @@ func enrichMetadatas(items []metadata, baseDir string) []metadata {
 		enrichedMetas[index] = metadata
 
 		enrichedMetas[index].Target = path.Clean(path.Join(baseDir, metadata.Target))
+		enrichedMetas[index].Tags["name"] = path.Base(baseDir)
 	}
 
 	return enrichedMetas
@@ -122,6 +123,10 @@ func calculateHitrate(a map[string]string, b map[string]string) float32 {
 		if b[key] == value {
 			hitrate++
 		}
+	}
+
+	if a["name"] == b["name"] {
+		hitrate += 1
 	}
 
 	return hitrate / float32(len(a))

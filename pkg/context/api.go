@@ -29,6 +29,7 @@ func GatherContext(log logger, fs *afero.Afero, targetPath string) (Context, err
 		return Context{}, fmt.Errorf("acquiring language for target %s: %w", target, err)
 	}
 
+	ctx.Tags["name"] = path.Base(targetPath)
 	ctx.Tags["language"] = lang
 
 	return ctx, nil
