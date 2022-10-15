@@ -21,7 +21,7 @@ water Makefile
 
 ## Installation
 
-See [install.md](INSTALL.md)
+See [instructions](INSTALL.md)
 
 ## Configuration
 
