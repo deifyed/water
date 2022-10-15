@@ -21,17 +21,12 @@ water Makefile
 
 ## Installation
 
-```shell
-# Build the project
-make build
-
-# Then install it into ~/.local/bin
-make install
-
-# To adjust installation path, set the PREFIX variable
-make install PREFIX=/usr/local
-```
+See [install.md](INSTALL.md)
 
 ## Configuration
 
-See [example config](examples/water.yaml)
+See [full example config](examples/water.yaml)
+
+## Creating templates
+
+See [example templates directory](examples/templates)
