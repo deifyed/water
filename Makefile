@@ -27,6 +27,8 @@ GOCRITIC := $(GOBIN)/gocritic
 $(GOCRITIC):
 	$(GO) install github.com/go-critic/go-critic/cmd/gocritic@v0.6.5
 
+dependencies: $(GOLANGCILINT) $(RICHGO) $(GOSEC) $(GOFUMPT) $(GOCRITIC)
+
 fmt: $(GOFUMPT) $(GOCRITIC)
 	$(GO) fmt ./...
 	goimports -w .
@@ -43,7 +45,8 @@ test: $(RICHGO)
 security: $(GOSEC)
 	gosec -quiet ./...
 
-check: fmt test lint security
+check: dependencies
+	pre-commit run -a
 
 build:
 	mkdir -p $(BUILD_DIR)
