@@ -13,3 +13,8 @@ type metadataHit struct {
 	Metadata metadata
 	Hitrate  float32
 }
+
+// templateEnvironment defines available template variables
+type templateEnvironment struct {
+	ProjectName string
+}

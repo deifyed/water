@@ -35,7 +35,9 @@ func Discover(log logger, fs *afero.Afero, templateDir string, context context.C
 
 	buf := bytes.Buffer{}
 
-	err = t.Execute(&buf, struct{}{})
+	err = t.Execute(&buf, templateEnvironment{
+		ProjectName: path.Base(path.Dir(context.TargetPath)),
+	})
 	if err != nil {
 		return nil, fmt.Errorf("executing template: %w", err)
 	}
