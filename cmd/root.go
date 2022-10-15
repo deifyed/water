@@ -54,15 +54,15 @@ func init() {
 		&cfgFile,
 		"config",
 		"",
-		"config file (default $HOME/.config/water/water.yaml)",
+		"set config file (default $HOME/.config/water/water.yaml)",
 	)
 
-	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", "info", "log level")
+	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", "info", "set log level")
 
 	err = viper.BindPFlag(config.LogLevel, rootCmd.PersistentFlags().Lookup("log-level"))
 	cobra.CheckErr(err)
 
-	rootCmd.Flags().StringVarP(&templatesDir, "templates", "t", templatesDir, "templates directory")
+	rootCmd.Flags().StringVarP(&templatesDir, "templates", "t", templatesDir, "set templates directory")
 
 	err = viper.BindPFlag(config.TemplatesDirectory, rootCmd.Flags().Lookup("templates"))
 	cobra.CheckErr(err)
