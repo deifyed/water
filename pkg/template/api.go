@@ -20,19 +20,8 @@ func Discover(log logger, fs *afero.Afero, templateDir string, context context.C
 		return nil, fmt.Errorf("gathering metadata: %w", err)
 	}
 
-	log.Debugf("found %d metadatas", len(metadatas))
-
-	topHit := metadataHit{}
-
-	for _, metadata := range metadatas {
-		log.Debugf("assessing metadata for target %s", metadata.Target)
-
-		hitrate := calculateHitrate(context.Tags, metadata.Tags)
-
-		if hitrate > topHit.Hitrate {
-			topHit = metadataHit{Metadata: metadata, Hitrate: hitrate}
-		}
-	}
+	log.Debugf("Assessing %d metadatas", len(metadatas))
+	topHit := getMostRelevantMetadata(log, context.Tags, metadatas)
 
 	content, err := fs.ReadFile(path.Clean(topHit.Metadata.Target))
 	if err != nil {
@@ -54,16 +43,23 @@ func Discover(log logger, fs *afero.Afero, templateDir string, context context.C
 	return &buf, nil
 }
 
-func calculateHitrate(a map[string]string, b map[string]string) float32 {
-	var hitrate float32
+func getMostRelevantMetadata(log logger, tags map[string]string, metadatas []metadata) metadataHit {
+	topHit := metadataHit{}
+	logEntry := make([]string, len(metadatas))
 
-	for key, value := range a {
-		if b[key] == value {
-			hitrate++
+	for index, metadata := range metadatas {
+		hitrate := calculateHitrate(tags, metadata.Tags)
+
+		if hitrate > topHit.Hitrate {
+			topHit = metadataHit{Metadata: metadata, Hitrate: hitrate}
 		}
+
+		logEntry[index] = fmt.Sprintf("%s relevance: %f", metadata.Target, hitrate)
 	}
 
-	return hitrate / float32(len(a))
+	log.Debugf("%v", logEntry)
+
+	return topHit
 }
 
 func gatherMetadataForTemplateEntities(log logger, fs *afero.Afero, templateDir string) ([]metadata, error) {
@@ -115,4 +111,16 @@ func enrichMetadatas(items []metadata, baseDir string) []metadata {
 	}
 
 	return enrichedMetas
+}
+
+func calculateHitrate(a map[string]string, b map[string]string) float32 {
+	var hitrate float32
+
+	for key, value := range a {
+		if b[key] == value {
+			hitrate++
+		}
+	}
+
+	return hitrate / float32(len(a))
 }
