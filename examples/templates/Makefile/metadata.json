@@ -1,9 +1,9 @@
 [
-    {
-	"target": "./golang",
-	"tags": {
-	    "name": "Makefile",
-	    "language": "golang"
+	{
+		"target": "./golang",
+		"tags": {
+			"name": "Makefile",
+			"language": "golang"
+		}
 	}
-    }
 ]
