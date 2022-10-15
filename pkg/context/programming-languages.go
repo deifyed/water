@@ -8,16 +8,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var extensionToLanguage = map[string]string{
-	".go":   "golang",
-	".java": "java",
-	".js":   "javascript",
-	".py":   "python",
-	".rb":   "ruby",
-	".sh":   "shell",
-	".ts":   "typescript",
-}
-
 // acquireMainLanguageForDir attempts to determine the main programming language of the target directory
 func acquireMainLanguageForDir(fs *afero.Afero, targetDir string) (string, error) {
 	languageCount := make(map[string]int)
@@ -40,7 +30,7 @@ func acquireMainLanguageForDir(fs *afero.Afero, targetDir string) (string, error
 			return nil
 		}
 
-		_, ok := extensionToLanguage[lang]
+		_, ok := languageCount[lang]
 		if !ok {
 			languageCount[lang] = 0
 		}
@@ -72,4 +62,14 @@ func acquireMainLanguageForFile(fs *afero.Afero, targetFile string) (string, err
 	}
 
 	return "", nil
+}
+
+var extensionToLanguage = map[string]string{
+	".go":   "golang",
+	".java": "java",
+	".js":   "javascript",
+	".py":   "python",
+	".rb":   "ruby",
+	".sh":   "shell",
+	".ts":   "typescript",
 }
