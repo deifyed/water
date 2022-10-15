@@ -1,0 +1,8 @@
+[
+    {
+	"target": "./golang",
+	"tags": {
+	    "language": "golang"
+	}
+    }
+]
