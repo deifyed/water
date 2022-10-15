@@ -15,9 +15,7 @@ import (
 
 // Discover returns a relevant template for the given context
 func Discover(log logger, fs *afero.Afero, templateDir string, context context.Context) (io.Reader, error) {
-	log.Debugf("discovering %s", templateDir)
-
-	metadatas, err := gatherMetadataForTemplateEntities(fs, templateDir)
+	metadatas, err := gatherMetadataForTemplateEntities(log, fs, templateDir)
 	if err != nil {
 		return nil, fmt.Errorf("gathering metadata: %w", err)
 	}
@@ -68,7 +66,7 @@ func calculateHitrate(a map[string]string, b map[string]string) float32 {
 	return hitrate / float32(len(a))
 }
 
-func gatherMetadataForTemplateEntities(fs *afero.Afero, templateDir string) ([]metadata, error) {
+func gatherMetadataForTemplateEntities(log logger, fs *afero.Afero, templateDir string) ([]metadata, error) {
 	allMetadatas := make([]metadata, 0)
 
 	err := fs.Walk(templateDir, func(targetPath string, info iofs.FileInfo, err error) error {
@@ -93,7 +91,7 @@ func gatherMetadataForTemplateEntities(fs *afero.Afero, templateDir string) ([]m
 
 		err = json.Unmarshal(rawMetadata, &metadatas)
 		if err != nil {
-			return fmt.Errorf("unmarshalling: %w", err)
+			return fmt.Errorf("unmarshalling %s: %w", path.Join(templateDir, targetPath), err)
 		}
 
 		allMetadatas = append(allMetadatas, enrichMetadatas(metadatas, path.Dir(targetPath))...)

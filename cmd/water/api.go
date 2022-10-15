@@ -36,6 +36,7 @@ func RunE(fs *afero.Afero) func(*cobra.Command, []string) error {
 
 		log.Debug(targetContext)
 
+		log.Debugf("Discover templates in %s", templateDir)
 		template, err := template.Discover(log, fs, templateDir, targetContext)
 		if err != nil {
 			return fmt.Errorf("discovering template: %w", err)
