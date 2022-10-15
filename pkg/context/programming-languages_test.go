@@ -46,7 +46,8 @@ func TestAcquireMainLanguageForFile(t *testing.T) {
 
 			fs := &afero.Afero{Fs: afero.NewMemMapFs()}
 
-			fs.WriteReader(tc.withFile.Path, tc.withFile.Content)
+			err := fs.WriteReader(tc.withFile.Path, tc.withFile.Content)
+			assert.NoError(t, err)
 
 			language, err := acquireMainLanguageForFile(fs, tc.withFile.Path)
 			assert.NoError(t, err)

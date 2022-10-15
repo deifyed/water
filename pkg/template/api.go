@@ -71,7 +71,7 @@ func calculateHitrate(a map[string]string, b map[string]string) float32 {
 func gatherMetadataForTemplateEntities(fs *afero.Afero, templateDir string) ([]metadata, error) {
 	allMetadatas := make([]metadata, 0)
 
-	fs.Walk(templateDir, func(targetPath string, info iofs.FileInfo, err error) error {
+	err := fs.Walk(templateDir, func(targetPath string, info iofs.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -100,6 +100,9 @@ func gatherMetadataForTemplateEntities(fs *afero.Afero, templateDir string) ([]m
 
 		return nil
 	})
+	if err != nil {
+		return nil, fmt.Errorf("walking %s: %w", templateDir, err)
+	}
 
 	return allMetadatas, nil
 }

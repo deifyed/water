@@ -12,7 +12,7 @@ import (
 func acquireMainLanguageForDir(fs *afero.Afero, targetDir string) (string, error) {
 	languageCount := make(map[string]int)
 
-	fs.Walk(targetDir, func(targetPath string, info os.FileInfo, err error) error {
+	err := fs.Walk(targetDir, func(targetPath string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -39,6 +39,9 @@ func acquireMainLanguageForDir(fs *afero.Afero, targetDir string) (string, error
 
 		return nil
 	})
+	if err != nil {
+		return "", fmt.Errorf("walking %s: %w", targetDir, err)
+	}
 
 	strongestLanguage := ""
 	strongestLanguageCount := 0

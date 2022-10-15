@@ -58,10 +58,14 @@ func init() {
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", "info", "log level")
-	viper.BindPFlag(config.LogLevel, rootCmd.PersistentFlags().Lookup("log-level"))
+
+	err = viper.BindPFlag(config.LogLevel, rootCmd.PersistentFlags().Lookup("log-level"))
+	cobra.CheckErr(err)
 
 	rootCmd.Flags().StringVarP(&templatesDir, "templates", "t", templatesDir, "templates directory")
-	viper.BindPFlag(config.TemplatesDirectory, rootCmd.Flags().Lookup("templates"))
+
+	err = viper.BindPFlag(config.TemplatesDirectory, rootCmd.Flags().Lookup("templates"))
+	cobra.CheckErr(err)
 }
 
 // initConfig reads in config file and ENV variables if set.
