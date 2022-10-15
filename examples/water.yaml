@@ -1,0 +1,3 @@
+# ~/.config/water/water.yaml
+logLevel: info # Set verbosity [info, debug]
+templatesDirectory: ~/.config/water/templates # Set templates directory

@@ -31,3 +31,7 @@ make install
 # To adjust installation path, set the PREFIX variable
 make install PREFIX=/usr/local
 ```
+
+## Configuration
+
+See [example config](examples/water.yaml)
