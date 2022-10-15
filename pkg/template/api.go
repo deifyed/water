@@ -76,7 +76,7 @@ func gatherMetadataForTemplateEntities(log logger, fs *afero.Afero, templateDir 
 			return nil
 		}
 
-		if info.Name() != "metadata" {
+		if info.Name() != "metadata.json" {
 			return nil
 		}
 

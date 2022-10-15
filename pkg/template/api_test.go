@@ -43,7 +43,7 @@ func TestDiscover(t *testing.T) {
 				raw, err := json.Marshal(metadatas)
 				assert.NoError(t, err)
 
-				err = fs.WriteFile("/templates/Makefile/metadata", raw, 0o600)
+				err = fs.WriteFile("/templates/Makefile/metadata.json", raw, 0o600)
 				assert.NoError(t, err)
 
 				err = fs.WriteFile("/templates/Makefile/golang", []byte("golang makefile content"), 0o600)
@@ -75,7 +75,7 @@ func TestDiscover(t *testing.T) {
 				raw, err := json.Marshal(metadatas)
 				assert.NoError(t, err)
 
-				err = fs.WriteFile("/templates/Makefile/metadata", raw, 0o600)
+				err = fs.WriteFile("/templates/Makefile/metadata.json", raw, 0o600)
 				assert.NoError(t, err)
 
 				err = fs.WriteFile("/templates/Makefile/golang", []byte("golang makefile content"), 0o600)
@@ -110,7 +110,7 @@ func TestDiscover(t *testing.T) {
 				raw, err := json.Marshal(metadatas)
 				assert.NoError(t, err)
 
-				err = fs.WriteFile("/templates/Makefile/metadata", raw, 0o600)
+				err = fs.WriteFile("/templates/Makefile/metadata.json", raw, 0o600)
 				assert.NoError(t, err)
 
 				err = fs.WriteFile("/templates/Makefile/golang", []byte("golang makefile content"), 0o600)
@@ -132,7 +132,7 @@ func TestDiscover(t *testing.T) {
 				raw, err = json.Marshal(metadatas)
 				assert.NoError(t, err)
 
-				err = fs.WriteFile("/templates/package.json/metadata", raw, 0o600)
+				err = fs.WriteFile("/templates/package.json/metadata.json", raw, 0o600)
 				assert.NoError(t, err)
 
 				err = fs.WriteFile("/templates/package.json/vue", []byte("vue package.json content"), 0o600)
