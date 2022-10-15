@@ -5,6 +5,8 @@ GOBIN ?= $(GOPATH)/bin
 INSTALL_DIR=~/.local/bin
 BUILD_DIR=./build
 
+GO := $(shell command -v go 2> /dev/null)
+
 GOLANGCILINT := $(GOBIN)/golangci-lint
 $(GOLANGCILINT):
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.50.0
@@ -17,20 +19,31 @@ GOSEC := $(GOBIN)/gosec
 $(GOSEC):
 	curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v2.13.1
 
-fmt:
-	@goimports -w .
-	@gofmt -w .
+GOFUMPT := $(GOBIN)/gofumpt
+$(GOFUMPT):
+	$(GO) install mvdan.cc/gofumpt@v0.1.1
+
+GOCRITIC := $(GOBIN)/gocritic
+$(GOCRITIC):
+	$(GO) install github.com/go-critic/go-critic/cmd/gocritic@v0.6.5
+
+fmt: $(GOFUMPT) $(GOCRITIC)
+	$(GO) fmt ./...
+	goimports -w .
+	$(GOFUMPT) -s -w .
+	$(GOCRITIC) check ./...
+
 
 lint: $(GOLANGCILINT)
-	@golangci-lint run
+	golangci-lint run
 
 test: $(RICHGO)
 	@$(RICHGO) test -v ./...
 
 security: $(GOSEC)
-	@gosec -quiet ./...
+	gosec -quiet ./...
 
-check: fmt lint test security
+check: fmt test lint security
 
 build:
 	mkdir -p $(BUILD_DIR)
