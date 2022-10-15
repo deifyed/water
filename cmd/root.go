@@ -22,9 +22,9 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:          "water",
+	Use:          "water <path to file or directory>",
 	Short:        "Scaffold files and directories based on names and context",
-	Example:      "water Makefile",
+	Example:      "touch Makefile && water Makefile\nmkdir go-project && water go-project",
 	SilenceUsage: true,
 	Args:         cobra.ExactArgs(1),
 	RunE:         water.RunE(fs),
