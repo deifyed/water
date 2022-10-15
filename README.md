@@ -15,7 +15,7 @@ mkdir <directory name>
 # For example
 touch Makefile
 
-# Then, water it with nurishing liquid to sproud it into a beautiful tree
+# Then, water it with nurishing liquid to sproud it into a beautiful growth
 water Makefile
 ```
 
