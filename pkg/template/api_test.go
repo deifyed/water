@@ -3,6 +3,7 @@ package template
 import (
 	"encoding/json"
 	"io"
+	"path"
 	"testing"
 
 	"github.com/deifyed/water/pkg/context"
@@ -143,6 +144,37 @@ func TestDiscover(t *testing.T) {
 			withTemplateDir: "/templates",
 			expectTemplate:  "golang makefile content",
 		},
+		{
+			name:            "Should interpolate project name",
+			withTemplateDir: "/templates",
+			withContext: context.Context{
+				TargetType: context.TargetTypeFile,
+				TargetPath: "/horse/Makefile",
+				Tags:       map[string]string{"name": "Makefile", "language": "golang"},
+			},
+			withFs: func() *afero.Afero {
+				fs := &afero.Afero{Fs: afero.NewMemMapFs()}
+
+				scaffoldableItemDir := path.Join("/", "templates", "Makefile")
+
+				err := fs.MkdirAll(scaffoldableItemDir, 0o700)
+				assert.NoError(t, err)
+
+				metadatas := []metadata{{Target: "./golang", Tags: map[string]string{"name": "Makefile", "language": "golang"}}}
+
+				raw, err := json.Marshal(metadatas)
+				assert.NoError(t, err)
+
+				err = fs.WriteFile(path.Join(scaffoldableItemDir, "metadata.json"), raw, 0o600)
+				assert.NoError(t, err)
+
+				err = fs.WriteFile(path.Join(scaffoldableItemDir, "golang"), []byte("golang {{ .ProjectName }} content"), 0o600)
+				assert.NoError(t, err)
+
+				return fs
+			}(),
+			expectTemplate: "golang horse content",
+		},
 	}
 
 	for _, tc := range testCases {
@@ -151,7 +183,7 @@ func TestDiscover(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			result, err := Discover(&mockLogger{}, tc.withFs, tc.withTemplateDir, tc.withContext)
+			result, err := Discover(&mockLogger{t: t}, tc.withFs, tc.withTemplateDir, tc.withContext)
 			assert.NoError(t, err)
 
 			raw, err := io.ReadAll(result)
@@ -162,6 +194,10 @@ func TestDiscover(t *testing.T) {
 	}
 }
 
-type mockLogger struct{}
+type mockLogger struct {
+	t *testing.T
+}
 
-func (mockLogger) Debugf(_ string, _ ...interface{}) {}
+func (m mockLogger) Debugf(format string, args ...interface{}) {
+	m.t.Logf(format, args...)
+}
